@@ -2,7 +2,11 @@ import Image from "next/image";
 import { Formik, Form as FormikForm } from "formik";
 import { loginSchema } from "@/lib/schema";
 import clsx from "clsx";
+
 import { ContentfulApiService } from "@/lib/api/contentful";
+import { HrisApiService } from "@/lib/api/hris";
+import { LoginState } from "@/lib/interface";
+
 import Input from "./components/atomic/Input";
 
 interface ContentfulData {
@@ -44,7 +48,14 @@ export default function Home({
   }
 
   async function handleSubmit(values: FormValues) {
+    const hrisApiService = new HrisApiService();
+    const data: LoginState = {
+      email: values.email,
+      password: values.password,
+    };
     try {
+      const result = await hrisApiService.authLogin(data);
+      console.log(result);
     } catch (error) {
       console.error(error);
     }

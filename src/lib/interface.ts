@@ -1,5 +1,10 @@
 import React from "react";
 
+export type LoginState = {
+  email: string;
+  password: string;
+};
+
 export interface MainLayout {
   children?: React.ReactNode;
 }

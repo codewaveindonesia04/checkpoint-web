@@ -1,29 +1,29 @@
-import { useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { getCookie } from "cookies-next";
+import { ClockInData } from "@/lib/interface";
+import { HrisApiService } from "@/lib/api/hris";
+import Loading from "@/pages/components/atomic/Loading";
 
 function Dashboard() {
-  const sidebarRef: any = useRef(null);
+  const sidebarRef = useRef<HTMLElement | null>(null);
+  const [employeeData, setEmployeeData] = useState<ClockInData[]>([]);
+  const token = getCookie("token");
 
-  const employeeData = [
-    {
-      id: 1,
-      clockIn: "09:00 AM",
-      clockOut: "05:00 PM",
-      report: "Completed tasks",
-    },
-    {
-      id: 2,
-      clockIn: "10:00 AM",
-      clockOut: "06:00 PM",
-      report: "Pending review",
-    },
-    { id: 3, clockIn: "08:00 AM", clockOut: "04:00 PM", report: "On schedule" },
-  ];
+  const toggleSidebar = () => sidebarRef.current?.classList.toggle("hidden");
 
-  const toggleSidebar = () => {
-    if (sidebarRef.current) {
-      sidebarRef.current.classList.toggle("hidden");
+  const getEmployeeClockIns = async () => {
+    const hrisApiService = new HrisApiService(token as string);
+    try {
+      const { data } = await hrisApiService.getEmployeeClockIns();
+      setEmployeeData(Array.isArray(data?.data) ? data.data : []);
+    } catch {
+      setEmployeeData([]);
     }
   };
+
+  useEffect(() => {
+    getEmployeeClockIns();
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100 text-purple-800">
@@ -66,28 +66,38 @@ function Dashboard() {
           />
         </header>
         <section className="mt-6">
-          <table className="min-w-full bg-white rounded-md shadow-md">
-            <thead>
-              <tr>
-                <th className="px-4 py-2 bg-purple-700 text-white">ID</th>
-                <th className="px-4 py-2 bg-purple-700 text-white">Clock In</th>
-                <th className="px-4 py-2 bg-purple-700 text-white">
-                  Clock Out
-                </th>
-                <th className="px-4 py-2 bg-purple-700 text-white">Report</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employeeData.map((employee) => (
-                <tr key={employee.id} className="text-center">
-                  <td className="px-4 py-2 border">{employee.id}</td>
-                  <td className="px-4 py-2 border">{employee.clockIn}</td>
-                  <td className="px-4 py-2 border">{employee.clockOut}</td>
-                  <td className="px-4 py-2 border">{employee.report}</td>
+          {employeeData.length === 0 ? (
+            <Loading />
+          ) : (
+            <table className="min-w-full bg-white rounded-md shadow-md">
+              <thead>
+                <tr>
+                  {["ID", "Clock In", "Clock Out", "Report"].map((header) => (
+                    <th
+                      key={header}
+                      className="px-4 py-2 bg-purple-700 text-white"
+                    >
+                      {header}
+                    </th>
+                  ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {employeeData.map(
+                  ({ id, clockInTime, clockOutTime, report }) => (
+                    <tr key={id} className="text-center">
+                      <td className="px-4 py-2 border">{id}</td>
+                      <td className="px-4 py-2 border">{clockInTime}</td>
+                      <td className="px-4 py-2 border">
+                        {clockOutTime || "N/A"}
+                      </td>
+                      <td className="px-4 py-2 border">{report || "N/A"}</td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          )}
         </section>
       </main>
     </div>

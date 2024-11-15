@@ -1,29 +1,34 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { getCookie } from "cookies-next";
-import { ClockInData } from "@/lib/interface";
 import { HrisApiService } from "@/lib/api/hris";
+import { useQuery } from "@tanstack/react-query";
+
 import Loading from "@/pages/components/atomic/Loading";
+import { ClockInData } from "@/lib/interface";
 
 function Dashboard() {
   const sidebarRef = useRef<HTMLElement | null>(null);
-  const [employeeData, setEmployeeData] = useState<ClockInData[]>([]);
   const token = getCookie("token");
 
-  const toggleSidebar = () => sidebarRef.current?.classList.toggle("hidden");
-
-  const getEmployeeClockIns = async () => {
-    const hrisApiService = new HrisApiService(token as string);
-    try {
-      const { data } = await hrisApiService.getEmployeeClockIns();
-      setEmployeeData(Array.isArray(data?.data) ? data.data : []);
-    } catch {
-      setEmployeeData([]);
+  const fetchEmployeeClockIns = async () => {
+    if (!token) {
+      throw new Error("No token available");
     }
+    const hrisApiService = new HrisApiService(token as string);
+    const { data } = await hrisApiService.getEmployeeClockIns();
+    return Array.isArray(data?.data) ? data.data : [];
   };
 
-  useEffect(() => {
-    getEmployeeClockIns();
-  }, []);
+  const {
+    data: employeeData = [],
+    isLoading,
+    isError,
+  }: any = useQuery({
+    queryKey: ["employeeClockIns"],
+    queryFn: fetchEmployeeClockIns,
+  });
+
+  const toggleSidebar = () => sidebarRef.current?.classList.toggle("hidden");
 
   return (
     <div className="flex min-h-screen bg-gray-100 text-purple-800">
@@ -41,7 +46,7 @@ function Dashboard() {
           </a>
         </nav>
       </aside>
-      <main className="flex-1 p-6">
+      <div className="flex-1 p-6">
         <header className="flex items-center justify-between bg-white p-4 shadow rounded-md">
           <button onClick={toggleSidebar} className="text-gray-500 sm:hidden">
             <svg
@@ -66,8 +71,10 @@ function Dashboard() {
           />
         </header>
         <section className="mt-6">
-          {employeeData.length === 0 ? (
+          {isLoading ? (
             <Loading />
+          ) : isError ? (
+            <div>Error fetching employee data</div>
           ) : (
             <table className="min-w-full bg-white rounded-md shadow-md">
               <thead>
@@ -83,8 +90,8 @@ function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {employeeData.map(
-                  ({ id, clockInTime, clockOutTime, report }) => (
+                {employeeData?.map(
+                  ({ id, clockInTime, clockOutTime, report }: ClockInData) => (
                     <tr key={id} className="text-center">
                       <td className="px-4 py-2 border">{id}</td>
                       <td className="px-4 py-2 border">{clockInTime}</td>
@@ -99,7 +106,7 @@ function Dashboard() {
             </table>
           )}
         </section>
-      </main>
+      </div>
     </div>
   );
 }

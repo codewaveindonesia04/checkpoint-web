@@ -5,15 +5,16 @@ import clsx from "clsx";
 import { ContentfulApiService } from "@/lib/api/contentful";
 import { HrisApiService } from "@/lib/api/hris";
 import { ContentfulData, FormValues } from "@/lib/interface";
+import { TokenConfig } from "@/lib/custom/token";
 import Input from "./components/atomic/Input";
 import Loading from "./components/atomic/Loading";
-import { setCookie } from "cookies-next";
 
 export default function Home({
   contentfulData,
 }: {
   contentfulData: ContentfulData | null;
 }) {
+  const tokenConfig = new TokenConfig();
   const classes = {
     logoSection:
       "bg-purple-800 w-full h-screen flex flex-col justify-center items-center",
@@ -41,7 +42,7 @@ export default function Home({
         password: values.password,
       });
       if (result?.data?.access_token) {
-        setCookie("token", result?.data?.access_token, {
+        tokenConfig.setToken(result.data?.access_token, {
           maxAge: 60 * 60 * 24 * 7,
           path: "/",
         });

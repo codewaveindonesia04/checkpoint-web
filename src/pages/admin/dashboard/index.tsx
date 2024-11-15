@@ -5,12 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import Loading from "@/pages/components/atomic/Loading";
 import { ClockInData } from "@/lib/interface";
+import { TokenConfig } from "@/lib/custom/token";
 
 function Dashboard() {
   const sidebarRef = useRef<HTMLElement | null>(null);
-  const token = getCookie("token");
+  const tokenConfig = new TokenConfig();
 
   const fetchEmployeeClockIns = async () => {
+    const token = tokenConfig.getToken();
     if (!token) {
       throw new Error("No token available");
     }
@@ -36,7 +38,7 @@ function Dashboard() {
         ref={sidebarRef}
         className="bg-purple-700 text-white w-64 sm:block hidden"
       >
-        <div className="p-4 text-lg font-semibold">MyHRIS Dashboard</div>
+        <div className="p-4 text-lg font-semibold">MyHRIS</div>
         <nav className="mt-4">
           <a href="#" className="block py-2 px-4 hover:bg-purple-600">
             Employee Report

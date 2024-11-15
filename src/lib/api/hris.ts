@@ -3,15 +3,13 @@ import { LoginState } from "../interface";
 
 export class HrisApiService {
   private hrisApi;
-  private accessToken;
   private baseUrl = process.env.NEXT_PUBLIC_HRIS_API_BASE_URL;
 
-  constructor(accessToken?: string) {
-    this.accessToken = accessToken;
+  constructor(accessToken?: string | undefined) {
     this.hrisApi = axios.create({
       baseURL: this.baseUrl,
       headers: {
-        Authorization: `Bearer ${this.accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
     });

@@ -1,22 +1,17 @@
 import { AppProps } from "next/app";
-import cookie from "cookie";
+import { getCookie } from "cookies-next";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import "@/styles/globals.css";
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+  useEffect(() => {
+    const token = getCookie("token");
+    if (!token) {
+      router.push("/");
+    }
+  }, []);
+
   return <Component {...pageProps} />;
-}
-export function getServerSideProps(context: any) {
-  const cookies = cookie.parse(context.req.headers.cookie || "");
-  const token = cookies.token;
-  if (!token) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {},
-  };
 }

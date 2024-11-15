@@ -5,8 +5,30 @@ export type LoginState = {
   password: string;
 };
 
+export type ClockInData = {
+  id: number;
+  employeeId: number;
+  clockInTime: string;
+  clockOutTime: string | null;
+  report: string | null;
+};
+
+export interface ContentfulData {
+  items: any[];
+}
+
+export interface FormValues {
+  email: string;
+  password: string;
+}
+
 export interface MainLayout {
   children?: React.ReactNode;
+}
+
+export interface DashboardProps {
+  employeeData: ClockInData[];
+  isAuthenticated: boolean;
 }
 
 export interface InputProps {

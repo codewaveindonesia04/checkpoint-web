@@ -7,7 +7,7 @@ import Loading from "@/components/atomic/Loading";
 import { ClockInData } from "@/lib/interface";
 import { TokenConfig } from "@/lib/custom/token";
 
-function Dashboard() {
+export default function Dashboard() {
   const sidebarRef = useRef<HTMLElement | null>(null);
   const tokenConfig = new TokenConfig();
 
@@ -112,5 +112,3 @@ function Dashboard() {
     </div>
   );
 }
-
-export default Dashboard;

@@ -1,4 +1,4 @@
-import React from "react";
+import { ButtonHTMLAttributes } from "react";
 
 export type LoginState = {
   email: string;
@@ -38,3 +38,9 @@ export interface InputProps {
   label: string;
   isPassword?: boolean;
 }
+
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  isLoading?: boolean;
+  variant?: "primary" | "secondary";
+}
+

@@ -3,7 +3,7 @@ import { getCookie } from "cookies-next";
 import { HrisApiService } from "@/lib/api/hris";
 import { useQuery } from "@tanstack/react-query";
 
-import Loading from "@/pages/components/atomic/Loading";
+import Loading from "@/components/atomic/Loading";
 import { ClockInData } from "@/lib/interface";
 import { TokenConfig } from "@/lib/custom/token";
 

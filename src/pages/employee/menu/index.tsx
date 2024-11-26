@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Navbar from "@/components/molecules/Navbar";
 import MenuCard from "@/components/atomic/MenuCard";
+import MainCard from "@/components/atomic/MainCard";
 import Loading from "@/components/atomic/Loading";
 import { RoleConfig } from "@/lib/custom/role";
 import { TokenConfig } from "@/lib/custom/token";
@@ -16,7 +17,7 @@ export default function EmployeeMenu() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const getUserData = async () => {
+    async function getUserData() {
       try {
         const role = roleConfig.getRole() as string;
         const parsedUser = JSON.parse(role) as UserData | null;
@@ -26,7 +27,7 @@ export default function EmployeeMenu() {
       } finally {
         setLoading(false);
       }
-    };
+    }
 
     getUserData();
   }, []);
@@ -37,12 +38,20 @@ export default function EmployeeMenu() {
     }
   }, [user, router]);
 
-  const handleLogout = () => {
+  function handleLogout() {
     tokenConfig.removeToken();
     router.push("/");
-  };
+  }
 
   if (loading) return <Loading />;
+
+  function handleMenuClick(menu: string) {
+    if (menu === "attendance") {
+      router.push("/employee/menu/attendance");
+    } else if (menu === "leave") {
+      router.push("/employee/menu/leave");
+    }
+  }
 
   return (
     <div className="w-full h-screen flex flex-col">
@@ -52,17 +61,19 @@ export default function EmployeeMenu() {
         onLogout={handleLogout}
       />
       <div className="flex-grow flex items-center justify-center bg-purple-700 text-white">
-        <div className="container max-w-4xl bg-white rounded-lg shadow-lg flex divide-x divide-gray-300">
-          {menuItems.map((item) => (
-            <MenuCard
-              key={item.title}
-              imageSrc={item.imageSrc}
-              title={item.title}
-              description={item.description}
-              buttonText={item.buttonText}
-              onClick={item.onClick}
-            />
-          ))}
+        <div className="mx-1">
+          <MainCard>
+            {menuItems.map((item) => (
+              <MenuCard
+                key={item.title}
+                imageSrc={item.imageSrc}
+                title={item.title}
+                description={item.description}
+                buttonText={item.buttonText}
+                onClick={() => handleMenuClick(item.onClick)}
+              />
+            ))}
+          </MainCard>
         </div>
       </div>
     </div>
@@ -72,16 +83,18 @@ export default function EmployeeMenu() {
 const menuItems = [
   {
     imageSrc: "/attendance-logo.png",
-    title: "Mark Attendance",
-    description: "Clock in and out to record your working hours accurately.",
-    buttonText: "Mark Attendance",
-    onClick: () => console.log("Mark Attendance"),
+    title: "Absensi Kehadiran",
+    description:
+      "Catat jam kerja Anda dengan mudah dengan fitur clock-in dan clock-out yang akurat.",
+    buttonText: "Absen Sekarang",
+    onClick: "attendance",
   },
   {
     imageSrc: "/request-leave-logo.png",
-    title: "Apply for Leave",
-    description: "Easily submit your leave requests and check approval status.",
-    buttonText: "Apply for Leave",
-    onClick: () => console.log("Apply for Leave"),
+    title: "Ajukan Cuti",
+    description:
+      "Ajukan permohonan cuti Anda dengan mudah dan pantau status persetujuan permohonan Anda.",
+    buttonText: "Ajukan Cuti",
+    onClick: "leave",
   },
 ];

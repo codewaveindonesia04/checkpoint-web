@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, ReactNode } from "react";
 
 export type LoginState = {
   email: string;
@@ -53,6 +53,10 @@ export interface MenuCardProps {
   description: string;
   buttonText: string;
   onClick: () => void;
+}
+
+export interface MainCardProps {
+  children?: ReactNode
 }
 
 export interface NavbarProps {

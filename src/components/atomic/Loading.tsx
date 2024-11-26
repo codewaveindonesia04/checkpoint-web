@@ -1,4 +1,4 @@
-function Loading() {
+export default function Loading() {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="flex flex-col space-y-3 items-center justify-center py-4">
@@ -8,5 +8,3 @@ function Loading() {
     </div>
   );
 }
-
-export default Loading;

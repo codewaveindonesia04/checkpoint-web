@@ -1,20 +1,15 @@
 import { FC, useState } from "react";
 import Image from "next/image";
+import { NavbarProps } from "@/lib/interface";
 import { cn } from "@/lib/shadcn";
 
-interface NavbarProps {
-  email: string;
-  profilePicture?: any;
-  onLogout: () => void;
-}
-
-const Navbar: FC<NavbarProps> = ({ email, profilePicture, onLogout }) => {
+const Navbar: FC<NavbarProps> = ({ name, profilePicture, onLogout }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <nav className="w-full bg-slate-100 p-4 flex justify-end items-center text-purple-700 shadow-md">
       <div className="relative flex items-center space-x-7">
-        <span className="hidden sm:block text-sm font-semibold">{email}</span>
+        <span className="hidden sm:block text-sm font-semibold">{name}</span>
         <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="flex items-center space-x-2"

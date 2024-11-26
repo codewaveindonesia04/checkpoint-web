@@ -2,13 +2,13 @@ import { FC } from "react";
 import { ButtonProps } from "@/lib/interface";
 import { cn } from "@/lib/shadcn";
 
-const Button: FC<ButtonProps> = ({
+export default function Button({
   isLoading = false,
   variant = "primary",
   className,
   children,
   ...props
-}) => {
+}: ButtonProps) {
   const baseStyles = "font-semibold p-2 w-full rounded-md transition-colors";
   const variants = {
     primary: "bg-purple-600 text-white hover:bg-purple-700",
@@ -24,6 +24,4 @@ const Button: FC<ButtonProps> = ({
       {isLoading ? "Loading..." : children}
     </button>
   );
-};
-
-export default Button;
+}

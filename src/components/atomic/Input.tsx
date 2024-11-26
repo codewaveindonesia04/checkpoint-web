@@ -3,13 +3,13 @@ import { Field, ErrorMessage } from "formik";
 import { InputProps } from "@/lib/interface";
 import { cn } from "@/lib/shadcn";
 
-const Input: FC<InputProps> = ({
+export default function Input({
   name,
   type,
   placeholder,
   label,
   isPassword = false,
-}) => {
+}: InputProps) {
   const inputType = isPassword ? "password" : type;
 
   return (
@@ -41,6 +41,4 @@ const Input: FC<InputProps> = ({
       />
     </div>
   );
-};
-
-export default Input;
+}

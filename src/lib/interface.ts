@@ -13,6 +13,14 @@ export type ClockInData = {
   report: string | null;
 };
 
+export type UserData = {
+  data: {
+    name: string;
+    role: string;
+    access_token: string;
+  };
+};
+
 export interface ContentfulData {
   items: any[];
 }

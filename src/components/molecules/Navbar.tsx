@@ -1,17 +1,45 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { NavbarProps } from "@/lib/interface";
 import { cn } from "@/lib/shadcn";
 
-const Navbar: FC<NavbarProps> = ({ name, profilePicture, onLogout }) => {
+import Loading from "../atomic/Loading";
+export default function Navbar({
+  name,
+  profilePicture,
+  onLogout,
+}: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [greeting, setGreeting] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hour = new Date().getHours();
+      if (hour < 12) {
+        setGreeting("Good Morning");
+      } else if (hour < 18) {
+        setGreeting("Good Afternoon");
+      } else {
+        setGreeting("Good Evening");
+      }
+    }
+  }, []);
+
+  if (!greeting) {
+    return <Loading />;
+  }
 
   return (
-    <nav className="w-full bg-slate-100 p-4 flex justify-end items-center text-purple-700 shadow-md">
+    <div className="w-full bg-slate-100 p-4 flex justify-end items-center text-purple-700 shadow-md">
       <div className="relative flex items-center space-x-7">
-        <span className="hidden sm:block text-sm font-semibold">{name}</span>
+        {greeting && (
+          <p className="hidden sm:block text-sm font-semibold">
+            {greeting}, {name}
+          </p>
+        )}
         <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
           className="flex items-center space-x-2"
         >
           <Image
@@ -25,8 +53,7 @@ const Navbar: FC<NavbarProps> = ({ name, profilePicture, onLogout }) => {
         {isMenuOpen && (
           <div
             className={cn(
-              "absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md",
-              "text-black overflow-hidden"
+              "absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-md text-black overflow-hidden"
             )}
           >
             <button
@@ -44,8 +71,6 @@ const Navbar: FC<NavbarProps> = ({ name, profilePicture, onLogout }) => {
           </div>
         )}
       </div>
-    </nav>
+    </div>
   );
-};
-
-export default Navbar;
+}

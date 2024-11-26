@@ -1,41 +1,53 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Navbar from "@/components/molecules/Navbar";
 import MenuCard from "@/components/atomic/MenuCard";
 import Loading from "@/components/atomic/Loading";
 import { RoleConfig } from "@/lib/custom/role";
 import { TokenConfig } from "@/lib/custom/token";
+import { UserData } from "@/lib/interface";
 
 export default function EmployeeMenu() {
   const router = useRouter();
-  const roleConfig = useMemo(() => new RoleConfig(), []);
-  const tokenConfig = useMemo(() => new TokenConfig(), []);
+  const roleConfig = new RoleConfig();
+  const tokenConfig = new TokenConfig();
 
-  const user = useMemo(() => {
-    try {
-      return JSON.parse(roleConfig.getRole() as string) || null;
-    } catch {
-      return null;
-    }
-  }, [roleConfig]);
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (user?.data?.role !== "EMPLOYEE" || !user?.data?.access_token) {
+    const getUserData = async () => {
+      try {
+        const role = roleConfig.getRole() as string;
+        const parsedUser = JSON.parse(role) as UserData | null;
+        setUser(parsedUser);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getUserData();
+  }, []);
+
+  useEffect(() => {
+    if (user?.data?.role !== "EMPLOYEE" && user?.data?.access_token === null) {
       router.push("/");
     }
   }, [user, router]);
 
   const handleLogout = () => {
     tokenConfig.removeToken();
-    if (!tokenConfig.getToken()) router.push("/");
+    router.push("/");
   };
 
-  if (!user) return <Loading />;
+  if (loading) return <Loading />;
 
   return (
     <div className="w-full h-screen flex flex-col">
       <Navbar
-        name={user.data.name}
+        name={user?.data.name as string}
         profilePicture="https://i.pinimg.com/736x/47/09/80/470980b112a44064cd88290ac0edf6a6.jpg"
         onLogout={handleLogout}
       />

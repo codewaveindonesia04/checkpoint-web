@@ -17,7 +17,9 @@ export default function Home() {
   const tokenConfig = new TokenConfig();
   const roleConfig = new RoleConfig();
   const initialValues: FormValues = { email: "", password: "" };
-  const [contentfulData, setContentfulData] = useState<ContentfulData>();
+  const [contentfulData, setContentfulData] = useState<ContentfulData | null>(
+    null
+  );
 
   function validate(values: FormValues) {
     const result = loginSchema.safeParse(values);
@@ -66,13 +68,17 @@ export default function Home() {
       setContentfulData(contentfulData);
     } catch (error) {
       console.error("Error fetching data from Contentful:", error);
-      return { props: { contentfulData: null } };
+      setContentfulData(null);
     }
   }
 
   useEffect(() => {
     getContentful();
   }, []);
+
+  if (contentfulData === null) {
+    return <Loading />;
+  }
 
   return (
     <div className="w-full h-screen flex justify-center items-center text-purple-700">
@@ -87,7 +93,7 @@ export default function Home() {
       </div>
       <div className="bg-purple-800 w-full h-screen flex flex-col justify-center items-center">
         <div className="w-1/2 mb-10 font-semibold text-white">
-          {contentfulData?.items[0].fields.title}
+          {contentfulData?.items?.[0]?.fields?.title || "Loading..."}
         </div>
         <Formik
           initialValues={initialValues}

@@ -30,12 +30,6 @@ export default function Attendance() {
     getUserData();
   }, []);
 
-  useEffect(() => {
-    if (user?.data?.role !== "EMPLOYEE" && user?.data?.access_token === null) {
-      router.push("/");
-    }
-  }, [user, router]);
-
   function handleLogout() {
     tokenConfig.removeToken();
     router.push("/");

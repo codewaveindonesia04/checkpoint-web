@@ -2,8 +2,8 @@ import axios from "axios";
 
 export class ContentfulApiService {
   private contentfulApi;
-  private baseUrl = process.env.CONTENTFUL_API_BASE_URL;
-  private accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
+  private baseUrl = process.env.NEXT_PUBLIC_CONTENTFUL_API_BASE_URL;
+  private accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
 
   constructor() {
     this.contentfulApi = axios.create({

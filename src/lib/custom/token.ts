@@ -1,4 +1,4 @@
-import { setCookie, getCookie } from "cookies-next";
+import { setCookie, getCookie, deleteCookie } from "cookies-next";
 
 type Timer = {
   maxAge: number;
@@ -8,10 +8,12 @@ type Timer = {
 export class TokenConfig {
   private setCookie;
   private getCookie;
+  private deleteCookie;
 
   constructor() {
     this.setCookie = setCookie;
     this.getCookie = getCookie;
+    this.deleteCookie = deleteCookie;
   }
 
   public setToken(token: string, timer: Timer) {
@@ -23,5 +25,9 @@ export class TokenConfig {
 
   public getToken() {
     return this.getCookie("token");
+  }
+
+  public removeToken() {
+    return this.deleteCookie("token");
   }
 }

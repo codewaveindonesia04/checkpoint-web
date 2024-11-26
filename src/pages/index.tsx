@@ -1,25 +1,25 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { Formik, Form } from "formik";
 import { loginSchema } from "@/lib/schema";
 import { ContentfulApiService } from "@/lib/api/contentful";
 import { HrisApiService } from "@/lib/api/hris";
 import { ContentfulData, FormValues } from "@/lib/interface";
 import { TokenConfig } from "@/lib/custom/token";
+import { RoleConfig } from "@/lib/custom/role";
 import Input from "@/components/atomic/Input";
 import Button from "@/components/atomic/Button";
 import Loading from "@/components/atomic/Loading";
 
-export default function Home({
-  contentfulData,
-}: {
-  contentfulData: ContentfulData | null;
-}) {
+export default function Home() {
   const router = useRouter();
   const tokenConfig = new TokenConfig();
+  const roleConfig = new RoleConfig();
   const initialValues: FormValues = { email: "", password: "" };
+  const [contentfulData, setContentfulData] = useState<ContentfulData>();
 
-  const validate = (values: FormValues) => {
+  function validate(values: FormValues) {
     const result = loginSchema.safeParse(values);
     if (!result.success && result.error) {
       return result.error.errors.reduce((acc, err) => {
@@ -28,19 +28,51 @@ export default function Home({
       }, {} as Record<string, string>);
     }
     return {};
-  };
+  }
 
-  const handleSubmit = async (values: FormValues) => {
+  async function handleSubmit(values: FormValues) {
     try {
       const { data } = await new HrisApiService().authLogin(values);
-      if (data?.access_token) {
-        tokenConfig.setToken(data.access_token, { maxAge: 604800, path: "/" });
-        router.push("admin/dashboard");
+      const user = {
+        role: data?.data?.role,
+        token: data?.data?.access_token,
+      };
+      if (user?.token) {
+        tokenConfig.setToken(user.token, { maxAge: 604800, path: "/" });
+        roleConfig.setRole(data);
+        if (user?.role === "HR") {
+          router.push("/admin/dashboard");
+        } else if (user?.role === "EMPLOYEE") {
+          router.push("/employee/menu");
+        } else {
+          router.push("/");
+        }
       }
     } catch (error) {
       console.error(error);
     }
-  };
+  }
+
+  async function getContentful() {
+    try {
+      const CONTENTFUL_SPACE_ID = process.env
+        .NEXT_PUBLIC_CONTENTFUL_SPACE_ID as string;
+      const CONTENTFUL_ENVIRONMENT_ID = process.env
+        .NEXT_PUBLIC_CONTENTFUL_ENVIRONMENT_ID as string;
+      const contentfulData = await new ContentfulApiService().getEntries(
+        CONTENTFUL_SPACE_ID,
+        CONTENTFUL_ENVIRONMENT_ID
+      );
+      setContentfulData(contentfulData);
+    } catch (error) {
+      console.error("Error fetching data from Contentful:", error);
+      return { props: { contentfulData: null } };
+    }
+  }
+
+  useEffect(() => {
+    getContentful();
+  }, []);
 
   return (
     <div className="w-full h-screen flex justify-center items-center text-purple-700">
@@ -91,18 +123,4 @@ export default function Home({
       </div>
     </div>
   );
-}
-
-export async function getStaticProps() {
-  try {
-    const { CONTENTFUL_ENVIRONMENT_ID, CONTENTFUL_SPACE_ID } = process.env;
-    const contentfulData = await new ContentfulApiService().getEntries(
-      CONTENTFUL_SPACE_ID!,
-      CONTENTFUL_ENVIRONMENT_ID!
-    );
-    return { props: { contentfulData }, revalidate: 60 };
-  } catch (error) {
-    console.error("Error fetching data from Contentful:", error);
-    return { props: { contentfulData: null } };
-  }
 }

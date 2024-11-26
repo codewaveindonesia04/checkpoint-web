@@ -39,8 +39,21 @@ export interface InputProps {
   isPassword?: boolean;
 }
 
+export interface MenuCardProps {
+  imageSrc: string;
+  title: string;
+  description: string;
+  buttonText: string;
+  onClick: () => void;
+}
+
+export interface NavbarProps {
+  name: string;
+  profilePicture?: any;
+  onLogout: () => void;
+}
+
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   variant?: "primary" | "secondary";
 }
-

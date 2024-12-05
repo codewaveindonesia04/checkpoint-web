@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { TokenConfig } from "@/lib/custom/token";
-import { RoleConfig } from "@/lib/custom/role";
+import { TokenConfig } from "@/lib/config/token";
+import { RoleConfig } from "@/lib/config/role";
 import Loading from "@/components/atomic/Loading";
 import "@/styles/globals.css";
 

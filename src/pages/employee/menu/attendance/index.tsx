@@ -3,8 +3,8 @@ import { useRouter } from "next/router";
 import Navbar from "@/components/molecules/Navbar";
 import Loading from "@/components/atomic/Loading";
 import { UserData } from "@/lib/interface";
-import { RoleConfig } from "@/lib/custom/role";
-import { TokenConfig } from "@/lib/custom/token";
+import { RoleConfig } from "@/lib/config/role";
+import { TokenConfig } from "@/lib/config/token";
 
 export default function Attendance() {
   const router = useRouter();

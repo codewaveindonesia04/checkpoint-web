@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { getCookie } from "cookies-next";
-import { HrisApiService } from "@/lib/api/hris";
+import { HrisApiService } from "@/lib/api/checkpointApi";
 import { useQuery } from "@tanstack/react-query";
 
 import Loading from "@/components/atomic/Loading";
 import { ClockInData } from "@/lib/interface";
-import { TokenConfig } from "@/lib/custom/token";
+import { TokenConfig } from "@/lib/config/token";
 
 export default function Dashboard() {
   const sidebarRef = useRef<HTMLElement | null>(null);

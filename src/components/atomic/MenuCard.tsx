@@ -10,12 +10,12 @@ export default function MenuCard({
   onClick,
 }: MenuCardProps) {
   return (
-    <div className={cn("w-1/2 p-8 flex flex-col items-center justify-center")}>
+    <div className={cn("w-full p-8 bg-slate-100 rounded-md flex flex-col items-center justify-center")}>
       <Image
         src={imageSrc}
         alt={title}
-        width={100}
-        height={100}
+        width={70}
+        height={70}
         className="mb-4"
         priority
       />

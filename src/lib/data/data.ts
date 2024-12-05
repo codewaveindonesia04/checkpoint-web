@@ -1,6 +1,9 @@
+import Attendance from '@/assets/attendanc.png'
+import Leave from '@/assets/leave.png'
+
 export const menuItems = [
     {
-      imageSrc: "/attendance-logo.png",
+      imageSrc: Attendance,
       title: "Absensi Kehadiran",
       description:
         "Catat jam kerja Anda dengan mudah dengan fitur clock-in dan clock-out yang akurat.",
@@ -8,7 +11,7 @@ export const menuItems = [
       onClick: "attendance",
     },
     {
-      imageSrc: "/request-leave-logo.png",
+      imageSrc: Leave,
       title: "Ajukan Cuti",
       description:
         "Ajukan permohonan cuti Anda dengan mudah dan pantau status persetujuan permohonan Anda.",

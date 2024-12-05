@@ -48,7 +48,7 @@ export interface InputProps {
 }
 
 export interface MenuCardProps {
-  imageSrc: string;
+  imageSrc: any;
   title: string;
   description: string;
   buttonText: string;
@@ -56,7 +56,7 @@ export interface MenuCardProps {
 }
 
 export interface MainCardProps {
-  children?: ReactNode
+  children?: ReactNode;
 }
 
 export interface NavbarProps {

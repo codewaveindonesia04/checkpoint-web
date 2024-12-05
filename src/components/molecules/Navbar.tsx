@@ -1,5 +1,6 @@
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { NavbarProps } from "@/lib/interface";
 import { cn } from "@/lib/shadcn";
 
@@ -28,7 +29,10 @@ export default function Navbar({ name, profilePicture }: NavbarProps) {
   }
 
   return (
-    <div className="w-full bg-slate-100 p-4 flex justify-end items-center text-purple-700 shadow-md">
+    <div className="w-full bg-slate-100 p-4 flex justify-between items-center text-purple-700 shadow-md">
+      <div className="flex space-x-5 font-bold">
+       <h1>CheckPoint</h1>
+      </div>
       <div className="relative flex items-center space-x-7">
         {greeting && (
           <p className="hidden sm:block text-sm font-semibold">

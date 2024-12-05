@@ -5,11 +5,24 @@ export default function useTimer() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(new Date().toLocaleTimeString());
+      const time = new Date();
+      const timeString = time.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      });
+
+      setCurrentTime(timeString);
     }, 1000);
 
     return () => clearInterval(interval);
   }, []);
 
-  return { currentTime };
+  const dateString = new Date().toLocaleDateString("id-ID", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+
+  return { currentTime, dateString };
 }

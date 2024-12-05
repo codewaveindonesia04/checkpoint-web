@@ -6,11 +6,13 @@ import Button from "@/components/atomic/Button";
 import useDataUser from "@/lib/custom/useDataUser";
 import useTimer from "@/lib/custom/useTimer";
 import useAttendance from "@/lib/custom/useAttendance";
+import useBack from "@/lib/custom/useBack";
 
 export default function Attendance() {
   const { user, loading } = useDataUser();
-  const { currentTime } = useTimer();
+  const { currentTime, dateString } = useTimer();
   const { history, handleClockIn, handleClockOut } = useAttendance();
+  const { goBack } = useBack();
 
   if (loading) return <Loading />;
 
@@ -25,8 +27,9 @@ export default function Attendance() {
           <MainCard>
             <div className="flex flex-col h-96 mx-auto justify-center items-center space-y-4 text-purple-700">
               <h1 className="text-xl font-bold">Attendance</h1>
-              <div className="text-xl font-bold font-medium">
-                <p>{currentTime}</p>
+              <div className="flex flex-col justify-center items-center text-xl py-5">
+                <p>{dateString}</p>
+                <p className="font-bold text-black">{currentTime}</p>
               </div>
               <div className="flex w-60 space-x-5">
                 <Button variant="primary" onClick={handleClockIn}>
@@ -62,6 +65,11 @@ export default function Attendance() {
               )}
             </div>
           </MainCard>
+          <div className="my-5">
+            <Button variant="primary" onClick={goBack}>
+              Back to Menu
+            </Button>
+          </div>
         </div>
       </div>
     </div>

@@ -41,19 +41,17 @@ export default function App({ Component, pageProps }: AppProps) {
           return;
         }
 
-        const roleBasedRoutes: Record<string, string[]> = {
-          HR: ["/admin/dashboard", "/admin/leave-approval"],
-          EMPLOYEE: [
-            "/employee/menu",
-            "/employee/menu/attendance",
-            "/employee/menu/leave",
-          ],
+        const roleBasedRoutes: Record<string, (path: string) => boolean> = {
+          HR: (path) => path.startsWith("/admin"),
+          EMPLOYEE: (path) => path.startsWith("/employee"),
         };
 
         const publicRoutes = ["/"];
         const isPublicRoute = publicRoutes.includes(router.pathname);
+
         const isAuthorizedRoute =
-          roleBasedRoutes[userRole]?.includes(router.pathname) || isPublicRoute;
+          isPublicRoute ||
+          (roleBasedRoutes[userRole]?.(router.pathname) ?? false);
 
         if (!isAuthorizedRoute) {
           router.push("/");

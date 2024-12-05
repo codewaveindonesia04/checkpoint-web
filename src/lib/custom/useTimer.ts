@@ -11,5 +11,5 @@ export default function useTimer() {
     return () => clearInterval(interval);
   }, []);
 
-  return currentTime;
+  return { currentTime };
 }

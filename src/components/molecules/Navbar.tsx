@@ -1,17 +1,14 @@
 import { FC, useState, useEffect } from "react";
 import Image from "next/image";
-import dynamic from "next/dynamic";
 import { NavbarProps } from "@/lib/interface";
 import { cn } from "@/lib/shadcn";
 
 import Loading from "../atomic/Loading";
-export default function Navbar({
-  name,
-  profilePicture,
-  onLogout,
-}: NavbarProps) {
+import useLogout from "@/lib/custom/useLogout";
+export default function Navbar({ name, profilePicture }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [greeting, setGreeting] = useState<string | null>(null);
+  const { logout } = useLogout();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -64,7 +61,7 @@ export default function Navbar({
             </button>
             <button
               className="w-full text-left px-4 py-2 hover:bg-gray-100"
-              onClick={onLogout}
+              onClick={logout}
             >
               Logout
             </button>

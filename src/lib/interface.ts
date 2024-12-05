@@ -62,7 +62,6 @@ export interface MainCardProps {
 export interface NavbarProps {
   name: string;
   profilePicture?: any;
-  onLogout: () => void;
 }
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

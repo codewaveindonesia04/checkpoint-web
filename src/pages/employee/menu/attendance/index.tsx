@@ -42,7 +42,6 @@ export default function Attendance() {
       <Navbar
         name={user?.data.name as string}
         profilePicture="https://i.pinimg.com/736x/47/09/80/470980b112a44064cd88290ac0edf6a6.jpg"
-        onLogout={handleLogout}
       />
       <div className="flex-grow flex flex-col items-center justify-center bg-purple-700 text-white">
         <MainCard>
